@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>Gestión de Inventario</h1>
+
+    <div class="controles">
+        <input type="text" id="buscador" placeholder="Buscar por nombre...">
+        
+        <select id="orden">
+            <option value="ASC">A-Z</option>
+            <option value="DESC">Z-A</option>
+        </select>
+
+        <button id="btnNuevo">Añadir Nuevo</button>
+    </div>
+
+    <div id="lista" class="grid"></div>
+
+    <script>
+        const buscador = document.getElementById('buscador');
+        const orden = document.getElementById('orden');
+        const lista = document.getElementById('lista');
+        const btnNuevo = document.getElementById('btnNuevo');
+
+        btnNuevo.onclick = function () {
+            window.location.href = 'formulario.html';
+        };
+
+        buscador.addEventListener('input', cargar);
+        orden.addEventListener('change', cargar);
+
+        async function cargar() {
+            const texto = buscador.value;
+            const tipoOrden = orden.value;
+
+            const respuesta = await fetch(`http://localhost:3000/articulos?search=${texto}&sort=${tipoOrden}`);
+            const datos = await respuesta.json();
+
+            lista.innerHTML = '';
+
+            for (let i = 0; i < datos.length; i++) {
+                const art = datos[i];
+
+                const div = document.createElement('div');
+                div.className = 'card';
+
+                div.innerHTML = `
+                    <img src="${art.imagen}" alt="${art.nombre}" width="100">
+                    <h3>${art.nombre}</h3>
+                    <p>Stock: ${art.stock}</p>
+                    <button onclick="editar(${art.id})">Editar</button>
+                    <button class="btn-borrar" onclick="eliminar(${art.id})">Eliminar</button>
+                `;
+
+                lista.appendChild(div);
+            }
+        }
+
+        async function eliminar(id) {
+            const confirmar = confirm("¿Estás seguro de que deseas eliminar este artículo?");
+            if (confirmar) {
+                await fetch(`http://localhost:3000/articulos/${id}`, {
+                    method: 'DELETE'
+                });
+                cargar();
+            }
+        }
+
+        window.onload = cargar;
+    </script>
+
+</body>
+</html>
