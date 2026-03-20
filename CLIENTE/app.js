@@ -1,14 +1,10 @@
 const API_URL = "http://localhost:5111/api/articulos";
 
-// Detectar si estamos en nuevo.html con un ID
 const params = new URLSearchParams(window.location.search);
 const editId = params.get("id");
 
-// ----------------------
-// CARGAR DATOS AL EDITAR
-// ----------------------
 async function cargarArticuloEditar() {
-    if (!editId) return; // no estamos editando
+    if (!editId) return;
 
     const res = await fetch(`${API_URL}/${editId}`);
     const art = await res.json();
@@ -18,15 +14,11 @@ async function cargarArticuloEditar() {
     document.getElementById("nombre").value = art.nombre;
     document.getElementById("stock").value = art.stock;
 
-    // Mostrar imagen actual
     const preview = document.getElementById("preview");
     preview.src = "http://localhost:5111" + art.imagen;
     preview.style.display = "block";
 }
 
-// ----------------------
-// GUARDAR (NUEVO O EDITAR)
-// ----------------------
 if (document.getElementById("btnGuardar")) {
     document.getElementById("btnGuardar").onclick = async () => {
 
@@ -53,25 +45,16 @@ if (document.getElementById("btnGuardar")) {
     };
 }
 
-// ----------------------
-// EDITAR DESDE INDEX
-// ----------------------
 window.editar = function (id) {
     window.location.href = `nuevo.html?id=${id}`;
 };
 
-// ----------------------
-// ELIMINAR
-// ----------------------
 window.eliminarArticulo = async function (id) {
     if (!confirm("¿Borrar definitivamente?")) return;
     await fetch(`${API_URL}/${id}`, { method: "DELETE" });
     cargar();
 };
 
-// ----------------------
-// BUSCAR Y FILTRAR
-// ----------------------
 if (document.getElementById("btnBuscar"))
     document.getElementById("btnBuscar").onclick = cargar;
 
@@ -84,18 +67,12 @@ if (document.getElementById("busqueda")) {
     });
 }
 
-// ----------------------
-// BOTÓN NUEVO
-// ----------------------
 if (document.getElementById("btnNuevo")) {
     document.getElementById("btnNuevo").onclick = () => {
         window.location.href = "nuevo.html";
     };
 }
 
-// ----------------------
-// CARGAR LISTA EN INDEX
-// ----------------------
 async function cargar() {
     if (!document.getElementById("grid")) return;
 
@@ -116,10 +93,6 @@ async function cargar() {
     `).join("");
 }
 
-// ----------------------
-// SI ESTAMOS EN nuevo.html Y HAY ID → CARGAR DATOS
-// ----------------------
 cargarArticuloEditar();
 
-// Si estamos en index.html → cargar lista
 cargar();
