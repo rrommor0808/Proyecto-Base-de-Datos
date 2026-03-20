@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Inventario</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <h1>GESTIÓN DE EQUIPOS</h1>
+
+    <div class="filtros">
+        <input id="busqueda" type="text" placeholder="¿Qué estás buscando?">
+
+        <select id="orden">
+            <option value="ASC">A-Z</option>
+            <option value="DESC">Z-A</option>
+        </select>
+
+        <button id="btnBuscar">BUSCAR</button>
+        <button id="btnFiltrar">FILTRAR</button>
+
+        <button id="btnNuevo">NUEVO</button>
+    </div>
+
+    <div id="grid" class="grid"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
